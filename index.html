@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROTOCOL: DIVINE SURRENDER</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- VIDEO BACKGROUND -->
+    <video id="bg-video" autoplay muted loop playsinline>
+        <source src="https://files.catbox.moe/k2y6a4.mp4" type="video/mp4"> <!-- Ethereal Gold/White abstract video -->
+    </video>
+
+    <!-- AUDIO BACKGROUND -->
+    <audio id="bg-audio" loop>
+        <source src="https://files.catbox.moe/pz59i2.mp3" type="audio/mpeg"> <!-- Ethereal choral/ambient audio -->
+    </audio>
+
+    <!-- OVERLAY: START -->
+    <div id="overlay">
+        <div class="divine-text pulse">YOU ARE IN THE PRESENCE OF THE GODDESS</div>
+        <div class="subtext">KNEEL AND INITIATE SURRENDER PROTOCOL.</div>
+        <button class="gold-btn" id="start-btn">KNEEL & ACKNOWLEDGE</button>
+    </div>
+
+    <!-- HUD: STATUS -->
+    <div id="hud-status" class="hidden">
+        SOUL STATUS: <span id="rank-display" class="glow-text">UNKNOWN</span>
+    </div>
+
+    <!-- MAIN UI -->
+    <div id="main-ui" class="hidden">
+
+        <div id="form-container">
+            <h2 id="stage-title" class="divine-title">STAGE 1: IDENTIFICATION</h2>
+            
+            <p class="warning-text">Lying to Her is a sin that cannot be forgiven.</p>
+
+            <!-- STAGE 1: IDENTITY -->
+            <div id="stage-1" class="form-stage">
+                <div class="input-group">
+                    <label>FULL LEGAL NAME</label>
+                    <input type="text" id="inp-name" placeholder="Name & Surname">
+                </div>
+                <div class="input-group">
+                    <label>PERSONAL EMAIL</label>
+                    <input type="email" id="inp-email" placeholder="email@provider.com">
+                </div>
+                <div class="input-group">
+                    <label>MOBILE NUMBER</label>
+                    <input type="tel" id="inp-phone" placeholder="+39 ...">
+                </div>
+                <div class="input-group">
+                    <label>HOME ADDRESS</label>
+                    <input type="text" id="inp-address" placeholder="Street, City, Zip Code">
+                </div>
+                <div class="input-group">
+                    <label>COLLEGE / WORKPLACE & DEPARTMENT</label>
+                    <input type="text" id="inp-work" placeholder="Where do you study or work?">
+                </div>
+                <div id="verify-ui-1" class="verify-box hidden">
+                    <div class="spinner"></div>
+                    <span id="verify-text-1">COMMUNING WITH DATABASES...</span>
+                </div>
+                <button class="gold-btn next-btn" onclick="nextStage(1)">SUBMIT IDENTITY</button>
+            </div>
+
+            <!-- STAGE 1.5: SOCIAL BINDING -->
+            <div id="stage-1.5" class="form-stage hidden">
+                <div class="input-group">
+                    <label>INSTAGRAM / FACEBOOK / SNAPCHAT</label>
+                    <input type="text" id="inp-socials" placeholder="@username or link">
+                </div>
+                <div class="input-group">
+                    <label>NAME 3-5 CLOSE FRIENDS/FAMILY (First names & Relation)</label>
+                    <textarea id="inp-friends" placeholder="E.g. Marco (Brother), Giulia (Best Friend)..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label>PHONE UNLOCK PIN / PASSWORD</label>
+                    <input type="text" id="inp-pin" placeholder="0000">
+                </div>
+                <button class="gold-btn next-btn" onclick="nextStage(1.5)">BIND SOCIALS</button>
+            </div>
+
+            <!-- STAGE 2: VISUAL PROOF (NEW) -->
+            <div id="stage-2" class="form-stage hidden">
+                <p class="instruction">The Goddess requires visual confirmation of Her property.</p>
+                <div class="input-group file-upload-group">
+                    <label>UPLOAD PHOTO OF YOUR ID (Front)</label>
+                    <input type="file" id="inp-id" accept="image/*">
+                    <div class="upload-status" id="status-id"></div>
+                </div>
+                <div class="input-group file-upload-group">
+                    <label>UPLOAD SELFIE</label>
+                    <span class="sub-label">Holding a paper with today's date and "Property of Goddess Dahlia"</span>
+                    <input type="file" id="inp-selfie" accept="image/*" capture="user">
+                    <div class="upload-status" id="status-selfie"></div>
+                </div>
+                <button class="gold-btn next-btn" onclick="nextStage(2)" id="btn-proof">VERIFY PROOF</button>
+            </div>
+
+            <!-- STAGE 3: FINANCIAL SURRENDER -->
+            <div id="stage-3" class="form-stage hidden">
+                <div class="input-group">
+                    <label>EXACT BANK BALANCE (€)</label>
+                    <input type="text" id="inp-balance" placeholder="0.00">
+                </div>
+                <div class="input-group">
+                    <label>ANNUAL INCOME (€)</label>
+                    <input type="text" id="inp-income" placeholder="0.00">
+                </div>
+                <div class="input-group">
+                    <label>ARE YOU WILLING TO RUIN YOUR CREDIT FOR HER?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="credit" value="YES"> YES</label>
+                        <label><input type="radio" name="credit" value="YES_OBVIOUSLY"> OF COURSE</label>
+                    </div>
+                </div>
+                <button class="gold-btn next-btn" onclick="nextStage(3)">OFFER WEALTH</button>
+            </div>
+
+            <!-- STAGE 4: DARK PSYCHOLOGY -->
+            <div id="stage-4" class="form-stage hidden">
+                <div class="input-group">
+                    <label>WHAT IS YOUR DARKEST SECRET?</label>
+                    <textarea id="inp-secret" placeholder="Confess..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label>DESCRIBE THE MOST PATHETIC THING YOU HAVE EVER DONE</label>
+                    <textarea id="inp-pathetic" placeholder="Do not hold back..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label>HAVE YOU EVER COMMITTED A CRIME?</label>
+                    <textarea id="inp-crime" placeholder="Theft? Violence? Fraud?"></textarea>
+                </div>
+                <button class="gold-btn next-btn" onclick="nextStage(4)">SUBMIT SINS</button>
+            </div>
+
+            <!-- STAGE 5: HUMILIATION MANTRA -->
+            <div id="stage-5" class="form-stage hidden">
+                <p>PROVE YOUR WORTHLESSNESS.</p>
+                <div class="mantra-target">I AM NOTHING MORE THAN AN ATM.</div>
+                <input type="text" id="inp-mantra" oninput="checkMantra()" autocomplete="off">
+                <div class="progress-bar">
+                    <div id="mantra-fill"></div>
+                </div>
+                <div id="mantra-count">0 / 3</div>
+            </div>
+
+            <!-- FINAL: THE THRONE TRAP -->
+            <div id="stage-final" class="hidden">
+                <div class="divine-box">
+                    <h3>CONTRACT OF ABSOLUTE SURRENDER</h3>
+                    <p>By proceeding, you acknowledge that your soul, your dignity, and your wealth belong entirely to Goddess Dahlia.</p>
+                    <p>Your data is secured. If you fail to provide tribute, everyone listed will be notified of your pathetic existence.</p>
+                </div>
+                
+                <button class="gold-btn hold-btn" id="hold-submit" onmousedown="startHold()" onmouseup="stopHold()" onmouseleave="stopHold()" ontouchstart="startHold()" ontouchend="stopHold()">
+                    HOLD TO FORFEIT YOUR EXISTENCE
+                </button>
+                <div class="hold-progress-bar">
+                    <div id="hold-fill"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
