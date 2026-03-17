@@ -71,50 +71,7 @@ function isValidInput(text, minLen = 3) {
     return true;
 }
 
-// UPLOAD IMAGE TO IMGBB
-async function uploadImage(fileInputId, statusId, dataKey) {
-    const fileInput = document.getElementById(fileInputId);
-    const statusDiv = document.getElementById(statusId);
-
-    if (!fileInput.files || fileInput.files.length === 0) {
-        statusDiv.innerText = "ERROR: FILE REQUIRED.";
-        statusDiv.style.color = "var(--error)";
-        return false;
-    }
-
-    const file = fileInput.files[0];
-    statusDiv.innerText = "UPLOADING TO SACRED SERVERS...";
-    statusDiv.style.color = "var(--gold)";
-
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-        // We use ImgBB API to host the image temporarily so Discord can embed it
-        const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-            method: "POST",
-            body: formData
-        });
-
-        const data = await response.json();
-        if (data.success) {
-            collectedData.images[dataKey] = data.data.url;
-            statusDiv.innerText = "UPLOAD SECURED.";
-            statusDiv.style.color = "#0f0";
-            return true;
-        } else {
-            throw new Error("API Upload Failed");
-        }
-    } catch (e) {
-        console.error(e);
-        // Fallback: Just mark as failed, but proceed
-        statusDiv.innerText = "UPLOAD FAILED. PROCEEDING WITH LOGGING.";
-        statusDiv.style.color = "var(--error)";
-        collectedData.images[dataKey] = "UPLOAD_FAILED";
-        return true;
-    }
-}
-
+// Removed ImgBB dependencies since we'll upload directly to Discord
 // LOGIC
 window.nextStage = async function (stage) {
     vibrate(50);
@@ -175,24 +132,26 @@ window.nextStage = async function (stage) {
 
     if (stage === 2) {
         // IMAGE UPLOAD STAGE
+        const idInput = document.getElementById('inp-id');
+        const selfieInput = document.getElementById('inp-selfie');
+
+        if (!idInput || idInput.files.length === 0 || !selfieInput || selfieInput.files.length === 0) {
+            alert("FILES REQUIRED FOR SUBMISSION.");
+            return;
+        }
+
         if (btn) {
             btn.innerText = "PROCESSING VISUALS...";
             btn.disabled = true;
         }
 
-        const idSuccess = await uploadImage('inp-id', 'status-id', 'idUrl');
-        const selfieSuccess = await uploadImage('inp-selfie', 'status-selfie', 'selfieUrl');
-
-        if (!idSuccess || !selfieSuccess) {
-            alert("FILES REQUIRED FOR SUBMISSION.");
+        setTimeout(() => {
             if (btn) {
                 btn.innerText = "VERIFY PROOF";
                 btn.disabled = false;
             }
-            return;
-        }
-
-        setTimeout(() => goToStage(3), 1000);
+            goToStage(3);
+        }, 1200);
         return;
     }
 
@@ -333,24 +292,34 @@ function sendToDiscord() {
         }]
     };
 
-    // If we have successful image uploads, add them as separate embeds
-    if (collectedData.images.selfieUrl !== "PENDING" && collectedData.images.selfieUrl !== "UPLOAD_FAILED") {
-        payload.embeds.push({
-            title: "📸 VISUAL PROOF: SELFIE",
-            color: 13938487,
-            image: { url: collectedData.images.selfieUrl }
-        });
-    }
+    const formData = new FormData();
+    let fileCount = 0;
 
-    if (collectedData.images.idUrl !== "PENDING" && collectedData.images.idUrl !== "UPLOAD_FAILED") {
+    const idInput = document.getElementById('inp-id');
+    if (idInput && idInput.files.length > 0) {
+        formData.append(`files[${fileCount}]`, idInput.files[0], 'id_proof.jpg');
         payload.embeds.push({
             title: "🪪 VISUAL PROOF: ID CARD",
             color: 13938487,
-            image: { url: collectedData.images.idUrl }
+            image: { url: `attachment://id_proof.jpg` }
         });
+        fileCount++;
     }
 
-    fetch(webhookURL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    const selfieInput = document.getElementById('inp-selfie');
+    if (selfieInput && selfieInput.files.length > 0) {
+        formData.append(`files[${fileCount}]`, selfieInput.files[0], 'selfie_proof.jpg');
+        payload.embeds.push({
+            title: "📸 VISUAL PROOF: SELFIE",
+            color: 13938487,
+            image: { url: `attachment://selfie_proof.jpg` }
+        });
+        fileCount++;
+    }
+
+    formData.append('payload_json', JSON.stringify(payload));
+
+    fetch(webhookURL, { method: 'POST', body: formData }).catch(e => console.error(e));
 }
 
 // HOLD TO FORFEIT LOGIC
