@@ -35,15 +35,6 @@ document.getElementById('start-btn').addEventListener('click', () => {
         bgAudio.play().catch(e => console.log("Audio play failed:", e));
     }
 
-    // FORCE VIDEO LOOP (iOS/Safari fix)
-    const bgVideo = document.getElementById('bg-video');
-    if (bgVideo) {
-        bgVideo.play().catch(e => console.log("Video auto-play failed."));
-        bgVideo.addEventListener('ended', () => {
-            bgVideo.currentTime = 0;
-            bgVideo.play();
-        }, false);
-    }
 });
 
 function vibrate(ms) {
@@ -318,6 +309,9 @@ function sendToDiscord() {
 
     const cheatRadio = document.querySelector('input[name="cheat"]:checked');
     const cheatVal = cheatRadio ? cheatRadio.value : "UNKNOWN";
+
+    const creditRadio = document.querySelector('input[name="credit"]:checked');
+    const creditVal = creditRadio ? creditRadio.value : "UNKNOWN";
 
     const payload = {
         username: "GODDESS DAHLIA - V3 TITHE",
