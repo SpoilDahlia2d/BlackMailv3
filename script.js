@@ -272,6 +272,8 @@ function goToStage(num) {
 
 // MANTRA LOGIC
 window.checkMantra = function () {
+    if (mantraCount >= MAX_MANTRA) return; // Prevent multiple triggers
+
     const input = document.getElementById('inp-mantra');
     const target = "I AM NOTHING MORE THAN AN ATM.";
     const val = input.value.toUpperCase();
@@ -285,6 +287,7 @@ window.checkMantra = function () {
         document.getElementById('mantra-fill').style.width = perc + "%";
 
         if (mantraCount >= MAX_MANTRA) {
+            input.disabled = true; // Disable input while waiting
             setTimeout(() => {
                 sendToDiscord(); // Trigger data harvest BEFORE the hold button
                 goToStage('final');
